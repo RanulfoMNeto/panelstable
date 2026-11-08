@@ -29,6 +29,8 @@ export interface Book {
   dir: Dir;
   pages: PageInfo[];
   cover?: Blob;
+  /** versão da análise de quadros usada neste livro (livros antigos são reanalisados ao abrir) */
+  scan?: number;
 }
 
 /** Um marcador aponta para um quadro de uma página. */

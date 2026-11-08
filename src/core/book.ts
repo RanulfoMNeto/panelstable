@@ -1,17 +1,25 @@
+import { zipSync } from 'fflate';
 import ScanWorker from './scan.worker?worker&inline';
 import { parseComicInfo, readCbz, type ComicInfo } from './cbz';
+import { isComicInfo, pathOf } from './files';
 import { db } from './db';
 import { scanImage, type PageScan } from './detect';
 import type { Book, Dir, PageInfo } from './types';
 
+/** Sobe quando a detecção de quadros muda: livros já salvos são reanalisados na próxima vez que abrirem. */
+export const SCAN_VERSION = 2;
+
 /** Identidade estável de um arquivo: nome + tamanho. */
 export const bookId = (f: File) => `${f.name}:${f.size}`;
 
-/** Importa um CBZ para a biblioteca: lê, analisa as páginas uma vez e guarda tudo no navegador. */
+/**
+ * Importa um CBZ para a biblioteca: lê, analisa as páginas uma vez e guarda tudo no navegador.
+ * Se o livro já existe mas foi analisado por uma versão antiga, só refaz a análise (datas e progresso ficam).
+ */
 export async function importCbz(file: File, onProgress: (done: number, total: number) => void): Promise<Book> {
   const id = bookId(file);
   const known = await db.getBook(id);
-  if (known) return known;
+  if (known?.scan === SCAN_VERSION) return known;
 
   const { images, comicInfo } = await readCbz(file);
   if (!images.length) throw new Error('Nenhuma imagem encontrada nesse arquivo.');
@@ -27,10 +35,24 @@ export async function importCbz(file: File, onProgress: (done: number, total: nu
   classify(pages, scans, typed);
   if (!marked) autoScenes(pages);
 
-  const book: Book = { id, name: file.name, size: file.size, added: Date.now(), opened: 0, ...meta, pages, cover: await makeCover(images[0].blob) };
-  await db.putFile(id, file);
+  const book: Book = {
+    id, name: file.name, size: file.size, added: known?.added ?? Date.now(), opened: known?.opened ?? 0,
+    ...meta, pages, cover: await makeCover(images[0].blob), scan: SCAN_VERSION,
+  };
+  if (!known) await db.putFile(id, file);
   await db.putBook(book);
   return book;
+}
+
+/**
+ * Importa uma pasta de imagens (por exemplo, um CBZ que o celular descompactou sozinho).
+ * As imagens são reempacotadas num CBZ sem compressão, e daí em diante tudo segue igual a um CBZ.
+ */
+export async function importPictures(files: File[], name: string, onProgress: (done: number, total: number) => void): Promise<Book> {
+  const entries: Record<string, Uint8Array> = {};
+  for (const f of files) entries[isComicInfo(f) ? 'ComicInfo.xml' : pathOf(f).split('/').pop()!] = new Uint8Array(await f.arrayBuffer());
+  const zip = zipSync(entries, { level: 0, mtime: new Date(2000, 0, 1) }); // sem data variável: a mesma pasta vira sempre o mesmo livro
+  return importCbz(new File([zip as Uint8Array<ArrayBuffer>], `${name}.cbz`, { type: 'application/vnd.comicbook+zip' }), onProgress);
 }
 
 /** Título, capítulo, créditos e sentido de leitura (do ComicInfo ou do nome do arquivo). */

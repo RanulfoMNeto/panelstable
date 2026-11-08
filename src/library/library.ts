@@ -3,7 +3,7 @@ import { $, esc } from '../core/dom';
 import { pad2 } from '../core/math';
 import type { Book, Progress } from '../core/types';
 
-export interface LibraryActions { open(id: string): void; add(): void }
+export interface LibraryActions { open(id: string): void }
 
 /** Estante: livros salvos neste navegador, do mais recente ao mais antigo, com progresso e marcadores. */
 export class Library {
@@ -12,8 +12,6 @@ export class Library {
   private covers: string[] = [];
 
   constructor(private act: LibraryActions) {
-    $('#libAdd').onclick = () => act.add();
-    $('#libDrop').onclick = () => act.add();
     this.shelf.addEventListener('click', (e) => this.onClick(e));
   }
 

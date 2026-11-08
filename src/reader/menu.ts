@@ -3,7 +3,6 @@ import { EFFECTS, prefs, resetPrefs, setPref, setPrefs, type Prefs } from '../co
 
 export interface MenuActions {
   library(): void;
-  open(): void;
   toggleMark(): void;
   goMark(page: number, panel: number): void;
   delMark(page: number, panel: number): void;
@@ -29,7 +28,7 @@ export class Menu {
 
     $('#mClose').onclick = () => this.close();
     $('#mLib').onclick = () => { this.close(); act.library(); };
-    $('#mOpen').onclick = () => { this.close(); act.open(); };
+    $$('[data-pick]', this.el).forEach((b) => b.addEventListener('click', () => this.close())); // o seletor de arquivo abre pelo main
     $$('[data-mark]').forEach((b) => b.addEventListener('click', () => act.toggleMark()));
     $('#marks').addEventListener('click', (e) => {
       const b = (e.target as Element).closest<HTMLElement>('[data-go],[data-del]');

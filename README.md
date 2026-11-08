@@ -6,8 +6,12 @@ marcadores ficam salvos só no navegador de quem lê.
 
 ## O que faz
 
-- **Biblioteca:** importa um ou vários `.cbz` (botão, arrastar e soltar). Cada livro mostra capa, progresso,
-  marcadores e quando foi lido.
+- **Biblioteca:** importa um ou vários `.cbz`/`.zip` ou uma **pasta de imagens** (botões ou arrastar e soltar).
+  A pasta serve para quando o celular descompacta o CBZ sozinho ao baixar: escolha a pasta e ela vira um livro,
+  igual ao CBZ. Cada livro mostra capa, progresso, marcadores e quando foi lido.
+- **Quadros:** achados automaticamente pelas calhas brancas. Quando arte, balão ou onomatopeia atravessa a calha
+  e gruda dois quadros, a calha escondida é achada pelas duas molduras paralelas e o corte é feito ali (retas,
+  inclinadas ou em L). Páginas de quadro único ou sem calhas entram inteiras.
 - **Histórico automático:** guarda a página e o quadro a cada passo. Ao abrir o site de novo, ele volta para o
   mesmo livro e o mesmo quadro. As páginas já lidas aparecem no progresso e no índice de cenas.
 - **Marcadores manuais:** o botão 栞 marca o quadro atual. A lista fica no menu e cada item leva direto ao quadro.
@@ -63,7 +67,9 @@ src/
     types.ts           tipos: Book, PageInfo, Progress, Mark
     cbz.ts             abre o CBZ e lê o ComicInfo.xml
     book.ts            importa um livro: metadados, análise das páginas, cenas, capa
+    files.ts           separa CBZ de pastas de imagens (escolhidas ou soltas) e agrupa por pasta
     detect.ts          acha os quadros (inclusive inclinados) e a ordem de leitura
+    split.ts           separa quadros grudados pelas calhas escondidas
     scan.worker.ts     roda a análise fora da linha principal
     db.ts              IndexedDB: livros, arquivos e histórico
     prefs.ts           ajustes do leitor

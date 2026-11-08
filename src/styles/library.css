@@ -2,7 +2,8 @@
 .lib { position: fixed; inset: 0; padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l); overflow: hidden; container-type: size; }
 .lib-board { height: 100%; display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: clamp(12px, 2cqw, 28px); }
 .lib-main { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: clamp(12px, 2.4cqh, 22px); overflow: auto; scrollbar-width: thin; padding: 2px 10px 2px 2px; }
-.lib-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.lib-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.lib-add { display: flex; gap: 8px; flex-wrap: wrap; }
 .lib-ttl { writing-mode: vertical-rl; font-size: min(6.4cqh, 11cqw); align-self: start; }
 .lib-note { margin: auto 0 0; font: 400 10px/1.5 var(--dot); letter-spacing: .08em; color: var(--mute); }
 

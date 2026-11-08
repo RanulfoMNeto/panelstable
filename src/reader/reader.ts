@@ -43,10 +43,9 @@ export class Reader {
   private saveTimer = 0;
   private par = { x: 0, y: 0, tx: 0, ty: 0 };
 
-  constructor(private onLibrary: () => void, private onOpenFile: () => void) {
+  constructor(private onLibrary: () => void) {
     this.menu = new Menu({
       library: () => this.onLibrary(),
-      open: () => this.onOpenFile(),
       toggleMark: () => this.toggleMark(),
       goMark: (p, j) => this.goTo(p, j),
       delMark: (p, j) => this.removeMark(p, j),

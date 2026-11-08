@@ -27,13 +27,16 @@
         <div class="lib-main">
           <div class="lib-top">
             <p class="lbl">Biblioteca<i>書庫</i></p>
-            <button type="button" class="menub" id="libAdd">+ CBZ<i>追加</i></button>
+            <div class="lib-add">
+              <button type="button" class="menub" data-pick="cbz">+ CBZ<i>追加</i></button>
+              <button type="button" class="menub" data-pick="dir" title="Uma pasta com as imagens do capítulo (por exemplo, um CBZ que o celular descompactou)">+ Pasta<i>フォルダ</i></button>
+            </div>
           </div>
           <ol class="shelf" id="shelf" aria-label="Livros"></ol>
-          <button type="button" class="dropzone" id="libDrop" hidden>
+          <button type="button" class="dropzone" id="libDrop" data-pick="cbz" hidden>
             <span class="dz1 gl" data-text="CBZ">CBZ</span>
             <span class="dz3">ファイルをドロップ</span>
-            <span class="dz2">Arraste arquivos .cbz para cá ou toque para escolher</span>
+            <span class="dz2">Arraste um .cbz ou a pasta com as imagens para cá, ou toque para escolher</span>
           </button>
           <p class="lib-note">Biblioteca, posição de leitura e marcadores ficam salvos só neste navegador. Nenhum arquivo é enviado.</p>
         </div>
@@ -88,9 +91,10 @@
 
       <div class="menu" id="menu" role="dialog" aria-label="Ajustes" hidden>
         <div class="mhead"><p class="msec">Menu<i>メニュー</i></p><button type="button" class="mx" id="mClose" aria-label="Fechar menu">✕</button></div>
-        <div class="mrow">
+        <div class="mrow n3">
           <button type="button" class="mi" id="mLib"><b>Biblioteca</b><i>書庫</i></button>
-          <button type="button" class="mi" id="mOpen"><b>Abrir CBZ</b><i>追加</i></button>
+          <button type="button" class="mi" data-pick="cbz"><b>Abrir CBZ</b><i>追加</i></button>
+          <button type="button" class="mi" data-pick="dir"><b>Abrir pasta</b><i>フォルダ</i></button>
         </div>
 
         <p class="msec">Marcadores<i>栞</i></p>
@@ -131,8 +135,9 @@
       <p class="sr" id="live" aria-live="polite"></p>
     </section>
 
-    <input type="file" id="file" accept=".cbz,.zip,application/zip,application/vnd.comicbook+zip" multiple hidden />
-    <div class="drop" id="drop" hidden>Solte o CBZ aqui</div>
+    <input type="file" id="file" accept=".cbz,.zip,application/zip,application/vnd.comicbook+zip,application/x-cbz" multiple hidden />
+    <input type="file" id="folder" webkitdirectory multiple hidden />
+    <div class="drop" id="drop" hidden>Solte o CBZ ou a pasta aqui</div>
     <div class="busy" id="busy" hidden><p class="busy-t" id="busyT"></p><div class="busy-bar"><span id="busyBar"></span></div></div>
     <p class="toast" id="toast" role="status" hidden></p>
   </body>
