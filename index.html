@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0a0a0a" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="description" content="Leitor de mangá e quadrinhos em CBZ, quadro a quadro. Tudo roda e fica salvo só no seu navegador." />
+    <title>Mesa de Quadros</title>
+    <link rel="icon" href="./favicon.svg" type="image/svg+xml" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DotGothic16&family=Zen+Kaku+Gothic+New:wght@500;700&display=swap" />
+    <script type="module" crossorigin src="./assets/index-BfP02dCC.js"></script>
+    <link rel="stylesheet" crossorigin href="./assets/index-DEAzGEaJ.css">
+  </head>
+  <body>
+    <svg width="0" height="0" style="position: absolute" aria-hidden="true" focusable="false">
+      <filter id="rough" x="-6%" y="-6%" width="112%" height="112%" color-interpolation-filters="sRGB">
+        <feTurbulence type="fractalNoise" baseFrequency="0.7 0.03" numOctaves="2" seed="3" result="n" />
+        <feDisplacementMap in="SourceGraphic" in2="n" scale="4" xChannelSelector="R" yChannelSelector="G" />
+      </filter>
+    </svg>
+
+    <!-- biblioteca -->
+    <section class="lib" id="lib" aria-label="Biblioteca">
+      <div class="lib-board">
+        <div class="lib-main">
+          <div class="lib-top">
+            <p class="lbl">Biblioteca<i>書庫</i></p>
+            <button type="button" class="menub" id="libAdd">+ CBZ<i>追加</i></button>
+          </div>
+          <ol class="shelf" id="shelf" aria-label="Livros"></ol>
+          <button type="button" class="dropzone" id="libDrop" hidden>
+            <span class="dz1 gl" data-text="CBZ">CBZ</span>
+            <span class="dz3">ファイルをドロップ</span>
+            <span class="dz2">Arraste arquivos .cbz para cá ou toque para escolher</span>
+          </button>
+          <p class="lib-note">Biblioteca, posição de leitura e marcadores ficam salvos só neste navegador. Nenhum arquivo é enviado.</p>
+        </div>
+        <h1 class="ttl lib-ttl gl" data-text="Mesa de Quadros">Mesa de Quadros</h1>
+      </div>
+    </section>
+
+    <!-- leitor -->
+    <section class="reader" id="reader" aria-label="Leitor" hidden>
+      <div class="board" id="board">
+        <div class="center" id="center">
+          <canvas class="rain" id="rain" aria-hidden="true"></canvas>
+          <div class="stage" id="stage">
+            <canvas class="speed" id="speed" aria-hidden="true"></canvas>
+            <p class="ghost" id="ghost" aria-hidden="true"></p>
+          </div>
+          <div class="pages" id="pages" hidden></div>
+          <div class="edge l" id="edgeL" aria-hidden="true"><span></span></div>
+          <div class="edge r" id="edgeR" aria-hidden="true"><span></span></div>
+        </div>
+        <div class="spine">
+          <h2 class="ttl gl" id="ttl" data-text=""></h2>
+          <p class="jdir" id="jdir" aria-hidden="true"></p>
+        </div>
+        <aside class="info" aria-label="Navegação">
+          <div class="info-top">
+            <button type="button" class="menub" data-mark aria-pressed="false" aria-label="Marcar este quadro" title="Marcar este quadro">栞</button>
+            <button type="button" class="menub" data-menu aria-controls="menu" aria-expanded="false">MENU<i>メニュー</i></button>
+          </div>
+          <div class="pnow">
+            <p class="pos gl" id="pos" data-text=""></p>
+            <p class="pof" id="pof"></p>
+            <div class="thumb" id="pthumb"><img class="t0" alt="" /><img class="t1" alt="" /><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon /></svg></div>
+          </div>
+          <p class="lbl">Cenas<i>場面</i></p>
+          <ol class="scenes" id="scenes"></ol>
+          <p class="chap" id="chap"></p>
+          <p class="credits" id="credits"></p>
+          <div class="numblk"><svg class="barcode" id="barcode" viewBox="0 0 100 18" preserveAspectRatio="none" aria-hidden="true"></svg><p class="tot" id="tot"></p></div>
+        </aside>
+      </div>
+
+      <div class="hud">
+        <p class="hpos" id="hpos"></p>
+        <button type="button" class="menub" data-mark aria-pressed="false" aria-label="Marcar este quadro">栞</button>
+        <button type="button" class="menub" data-menu aria-controls="menu" aria-expanded="false">MENU</button>
+      </div>
+      <div class="peek" id="peek" aria-hidden="true">
+        <div class="thumb" id="peekThumb"><img class="t0" alt="" /><img class="t1" alt="" /><svg viewBox="0 0 100 100" preserveAspectRatio="none" aria-hidden="true"><polygon /></svg></div>
+        <p id="peekTxt"></p>
+      </div>
+
+      <div class="menu" id="menu" role="dialog" aria-label="Ajustes" hidden>
+        <div class="mhead"><p class="msec">Menu<i>メニュー</i></p><button type="button" class="mx" id="mClose" aria-label="Fechar menu">✕</button></div>
+        <div class="mrow">
+          <button type="button" class="mi" id="mLib"><b>Biblioteca</b><i>書庫</i></button>
+          <button type="button" class="mi" id="mOpen"><b>Abrir CBZ</b><i>追加</i></button>
+        </div>
+
+        <p class="msec">Marcadores<i>栞</i></p>
+        <button type="button" class="mi sm" data-mark aria-pressed="false"><b>Marcar este quadro</b></button>
+        <ol class="marks" id="marks"></ol>
+
+        <p class="msec">Leitura<i>読む</i></p>
+        <div class="mrow" data-set="view" data-close><button type="button" class="mi" data-val="palco"><b>Palco</b><i>舞台</i></button><button type="button" class="mi" data-val="pagina"><b>Página</b><i>ページ</i></button></div>
+        <div class="mrow" data-set="dir" data-close><button type="button" class="mi sm" data-val="rtl"><b>← Mangá</b></button><button type="button" class="mi sm" data-val="ltr"><b>Ocidental →</b></button></div>
+
+        <p class="msec">Quadros já lidos da página, no palco</p>
+        <div class="mrow n6" data-set="ctx"><button type="button" class="mi sm" data-val="0"><b>0</b></button><button type="button" class="mi sm" data-val="1"><b>1</b></button><button type="button" class="mi sm" data-val="2"><b>2</b></button><button type="button" class="mi sm" data-val="3"><b>3</b></button><button type="button" class="mi sm" data-val="4"><b>4</b></button><button type="button" class="mi sm" data-val="99"><b>Todos</b></button></div>
+
+        <p class="msec">Zoom no modo página</p>
+        <div class="mrow n4" data-set="zoom" data-close><button type="button" class="mi sm" data-val="auto"><b>Auto</b></button><button type="button" class="mi sm" data-val="off"><b>Sem</b></button><button type="button" class="mi sm" data-val="soft"><b>Suave</b></button><button type="button" class="mi sm" data-val="full"><b>Total</b></button></div>
+
+        <p class="msec">Velocidade das transições</p>
+        <div class="mrow n3" data-set="pace"><button type="button" class="mi sm" data-val="slow"><b>Lenta</b></button><button type="button" class="mi sm" data-val="normal"><b>Normal</b></button><button type="button" class="mi sm" data-val="fast"><b>Rápida</b></button></div>
+
+        <p class="msec">Imagem<i>画像</i></p>
+        <div class="mrow"><button type="button" class="mi sm" data-flag="contrast"><b>Alto contraste</b></button><button type="button" class="mi sm" data-flag="negative"><b>Negativo</b></button></div>
+
+        <p class="msec">Efeitos<i>効果</i></p>
+        <div class="mrow">
+          <button type="button" class="mi sm" data-flag="preview"><b>Prévia ao mudar de quadro</b></button>
+          <button type="button" class="mi sm" data-flag="ghost"><b>Nome da cena</b></button>
+          <button type="button" class="mi sm" data-flag="glitch"><b>Glitches</b></button>
+          <button type="button" class="mi sm" data-flag="texture"><b>Textura</b></button>
+          <button type="button" class="mi sm" data-flag="rain"><b>Katakana</b></button>
+          <button type="button" class="mi sm" data-flag="motion"><b>Movimento</b></button>
+          <button type="button" class="mi sm" data-flag="speedLines"><b>Linhas de velocidade</b></button>
+          <button type="button" class="mi sm" id="mFxOff"><b>Tirar todos</b></button>
+        </div>
+        <button type="button" class="mi sm" id="mReset"><b>Restaurar padrão</b></button>
+
+        <div class="mscenes"><p class="msec">Cenas<i>場面</i></p><ol class="scenes" id="mscenes"></ol></div>
+      </div>
+      <p class="sr" id="live" aria-live="polite"></p>
+    </section>
+
+    <input type="file" id="file" accept=".cbz,.zip,application/zip,application/vnd.comicbook+zip" multiple hidden />
+    <div class="drop" id="drop" hidden>Solte o CBZ aqui</div>
+    <div class="busy" id="busy" hidden><p class="busy-t" id="busyT"></p><div class="busy-bar"><span id="busyBar"></span></div></div>
+    <p class="toast" id="toast" role="status" hidden></p>
+  </body>
+</html>
