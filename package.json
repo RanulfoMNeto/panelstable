@@ -1,0 +1,21 @@
+{
+  "name": "mesa-de-quadros",
+  "private": true,
+  "version": "1.0.0",
+  "description": "Leitor de mangá e quadrinhos em CBZ, quadro a quadro, que roda inteiro no navegador.",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "fflate": "^0.8.3",
+    "idb-keyval": "^6.3.0"
+  },
+  "devDependencies": {
+    "typescript": "^7.0.2",
+    "vite": "^8.3.6"
+  }
+}
